@@ -1,4 +1,5 @@
 const passportJWT = require('passport-jwt');
+const db = require('./database');
 
 let ExtractJwt = passportJWT.ExtractJwt;
 let JwtStrategy = passportJWT.Strategy;
@@ -10,8 +11,10 @@ jwtOptions.secretOrKey = 'wowwow';
 // lets create our strategy for web token
 const strategy = new JwtStrategy(jwtOptions, function(jwt_payload, next) {
   console.log('payload received', jwt_payload);
-  let user = getUser({ id: jwt_payload.id });
-
+  let user = db.getUser({ id: jwt_payload.id });
+  console.log(user);
+  // let user = {name:'piyush',password:'test',id:'123'};
+  // let user = null;
   if (user) {
     next(null, user);
   } else {
@@ -19,4 +22,4 @@ const strategy = new JwtStrategy(jwtOptions, function(jwt_payload, next) {
   }
 });
 
-exports.strategy = strategy;
+module.exports = { strategy, jwtOptions };

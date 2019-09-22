@@ -1,9 +1,12 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const passport = require('passport');
-const strategy = require('./jwt-strategy').strategy;
+const jwt = require('jsonwebtoken');
+const jwt_strategy = require('./jwt-strategy');
 const db = require('./database');
 
+const strategy = jwt_strategy.strategy;
+const jwtOptions = jwt_strategy.jwtOptions;
 // use the strategy
 passport.use(strategy);
 
@@ -38,8 +41,10 @@ app.post('/register', function(req, res, next) {
 //login route
 app.post('/login', async function(req, res, next) {
   const { name, password } = req.body;
+  console.log(req.body);
   if (name && password) {
-    let user = await db.getUser({ name: name });
+    // let user = await db.getUser({ name: name });
+    let user = {password:'test',id:'123'};
     if (!user) {
       res.status(401).json({ message: 'No such user found' });
     }
